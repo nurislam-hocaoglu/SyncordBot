@@ -1,0 +1,20 @@
+{
+  "name": "nuro-bot",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nurislam-hocaoglu/NuroBot.git"
+  },
+  "license": "ISC",
+  "author": "Nurislam Hocaoğlu",
+  "type": "commonjs",
+  "main": "shard.js",
+  "scripts": {
+    "test": "nodemon shard.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2"
+  }
+}
