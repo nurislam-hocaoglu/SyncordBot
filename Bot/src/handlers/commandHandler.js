@@ -64,33 +64,49 @@ function createDefaultCommandStructure(commandsPath) {
  * Slash komutlarını Discord API'ye kaydeder
  */
 async function registerCommands(client, commands) {
-    if (!process.env.CLIENT_ID || !process.env.DISCORD_TOKEN) {
-        console.warn('[Handler] ⚠️ CLIENT_ID veya DISCORD_TOKEN .env\'de bulunamadı, komutlar kaydedilmedi.');
+    const token = process.env.BOT_TOKEN || process.env.DISCORD_TOKEN;
+    let clientId = process.env.CLIENT_ID || client.user?.id;
+
+    if (!clientId && token) {
+        try {
+            clientId = Buffer.from(token.split('.')[0], 'base64').toString('ascii');
+        } catch (e) {
+            // Ignore error
+        }
+    }
+
+    if (!clientId || !token) {
+        console.warn('[Handler] ⚠️ CLIENT_ID veya BOT_TOKEN bulunamadı, komutlar kaydedilmedi.');
         return;
     }
 
-    const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+    if (commands.length === 0) {
+        console.log('[Handler] ℹ️ Kaydedilecek komut bulunamadı.');
+        return;
+    }
+
+    const rest = new REST({ version: '10' }).setToken(token);
     
     try {
-        console.log('[Handler] 🔄 Slash komutları Discord\'a kaydediliyor...');
+        console.log(`[Handler] 🔄 ${commands.length} adet Slash komutu Discord'a kaydediliyor...`);
         
         if (process.env.GUILD_ID) {
             // Geliştirme sunucusuna hızlı kayıt
             await rest.put(
-                Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+                Routes.applicationGuildCommands(clientId, process.env.GUILD_ID),
                 { body: commands }
             );
             console.log('[Handler] ✅ Geliştirme sunucusuna komutlar kaydedildi.');
         } else {
-            // Global kayıt (yayınlanması 1 saate kadar sürebilir)
+            // Global kayıt
             await rest.put(
-                Routes.applicationCommands(process.env.CLIENT_ID),
+                Routes.applicationCommands(clientId),
                 { body: commands }
             );
             console.log('[Handler] ✅ Global komutlar kaydedildi.');
         }
     } catch (error) {
-        console.error('[Handler] ❌ Komut kaydı hatası:', error);
+        console.error('[Handler] ❌ Komut kaydı hatası:', error.message);
     }
 }
 
