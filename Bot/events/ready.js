@@ -5,7 +5,8 @@ module.exports = {
     once: true,
     execute(client) {
         const shardId = client.shard ? client.shard.ids[0] : 'Tekil';
-        console.log(`[Event Ready] ✅ Bot aktif: ${client.user.tag} (Shard: #${shardId})`);
+        const totalShards = client.shard ? client.shard.count : 1;
+        console.log(`[Event Ready] ✅ Bot aktif: ${client.user.tag} (Shard: #${shardId} / Toplam Shard: ${totalShards})`);
         console.log(`[Event Ready] 📊 Sunucu: ${client.guilds.cache.size} | Toplam Kullanıcı: ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)}`);
 
         // Bot aktivitesini ayarla
