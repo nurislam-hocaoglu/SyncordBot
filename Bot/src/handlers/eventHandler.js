@@ -50,7 +50,7 @@ module.exports = {
         console.log(\`[Event] 📊 Shard: \${client.shard ? client.shard.ids[0] : 'N/A'} | Sunucular: \${client.guilds.cache.size}\`);
         
         // Aktivite ayarla
-        client.user.setActivity('/help | Nuro Bot', { type: 0 }); // 0 = Playing
+        client.user.setActivity('/help | Syncord Bot', { type: 0 }); // 0 = Playing
     }
 };`,
         

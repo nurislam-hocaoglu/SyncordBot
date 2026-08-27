@@ -37,12 +37,18 @@ class LoggingModule {
         const channel = await this.getLogChannel(member.guild, 'joins');
         if (!channel) return;
 
+        // Karşılama (welcome) kanalı ile aynı kanalsa mükerrer mesajı engelle
+        const config = await GuildConfig.findOne({ guildId: member.guild.id }).catch(() => null);
+        if (config?.welcome?.enabled && config?.welcome?.channel === channel.id) {
+            return;
+        }
+
         const embed = new EmbedBuilder()
             .setTitle('📥 Üye Katıldı')
             .setColor('#2ecc71')
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
             .addFields(
-                { name: 'Kullanıcı', value: `${member.user.tag} (${member.user.id})`, inline: true },
+                { name: 'Kullanıcı', value: `${member.user.tag}`, inline: true },
                 { name: 'Hesap Oluşturulma', value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`, inline: true },
                 { name: 'Toplam Üye', value: `${member.guild.memberCount}`, inline: true }
             )
@@ -58,12 +64,18 @@ class LoggingModule {
         const channel = await this.getLogChannel(member.guild, 'leaves');
         if (!channel) return;
 
+        // Uğurlama (goodbye) kanalı ile aynı kanalsa mükerrer mesajı engelle
+        const config = await GuildConfig.findOne({ guildId: member.guild.id }).catch(() => null);
+        if (config?.goodbye?.enabled && config?.goodbye?.channel === channel.id) {
+            return;
+        }
+
         const embed = new EmbedBuilder()
             .setTitle('📤 Üye Ayrıldı')
             .setColor('#e74c3c')
             .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
             .addFields(
-                { name: 'Kullanıcı', value: `${member.user.tag} (${member.user.id})`, inline: true },
+                { name: 'Kullanıcı', value: `${member.user.tag}`, inline: true },
                 { name: 'Toplam Üye', value: `${member.guild.memberCount}`, inline: true }
             )
             .setTimestamp();
@@ -83,7 +95,7 @@ class LoggingModule {
             .setTitle('🗑️ Mesaj Silindi')
             .setColor('#e67e22')
             .addFields(
-                { name: 'Yazar', value: `${message.author?.tag || 'Bilinmiyor'} (${message.author?.id})`, inline: true },
+                { name: 'Yazar', value: `${message.author?.tag || 'Bilinmiyor'}`, inline: true },
                 { name: 'Kanal', value: `${message.channel}`, inline: true },
                 { name: 'İçerik', value: message.content?.substring(0, 1000) || '*İçerik okunamadı veya medya*', inline: false }
             )
@@ -104,7 +116,7 @@ class LoggingModule {
             .setTitle('✏️ Mesaj Düzenlendi')
             .setColor('#3498db')
             .addFields(
-                { name: 'Yazar', value: `${newMessage.author?.tag} (${newMessage.author?.id})`, inline: true },
+                { name: 'Yazar', value: `${newMessage.author?.tag}`, inline: true },
                 { name: 'Kanal', value: `${newMessage.channel}`, inline: true },
                 { name: 'Eski İçerik', value: oldMessage.content?.substring(0, 500) || '*Boş*', inline: false },
                 { name: 'Yeni İçerik', value: newMessage.content?.substring(0, 500) || '*Boş*', inline: false }

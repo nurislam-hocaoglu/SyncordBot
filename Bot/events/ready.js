@@ -10,7 +10,7 @@ module.exports = {
 
         // Bot aktivitesini ayarla
         client.user.setPresence({
-            activities: [{ name: '/help | Nuro Bot', type: ActivityType.Playing }],
+            activities: [{ name: '/help | Syncord Bot', type: ActivityType.Playing }],
             status: 'online'
         });
     }

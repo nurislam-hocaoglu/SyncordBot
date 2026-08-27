@@ -33,7 +33,7 @@ module.exports = {
                 .setTitle('🔨 Üye Yasaklandı')
                 .setColor('#c0392b')
                 .addFields(
-                    { name: 'Yasaklanan Üye', value: `${targetUser.tag} (${targetUser.id})`, inline: true },
+                    { name: 'Yasaklanan Üye', value: `${targetUser.tag}`, inline: true },
                     { name: 'Yetkili', value: `${interaction.user.tag}`, inline: true },
                     { name: 'Sebep', value: reason, inline: false }
                 )

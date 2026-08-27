@@ -21,7 +21,7 @@ module.exports = {
         const uptimeString = `${days}g ${hours}s ${minutes}d ${seconds}sn`;
 
         const embed = new EmbedBuilder()
-            .setTitle('🤖 Nuro Bot Bilgi ve İstatistikler')
+            .setTitle('🤖 Syncord Bot Bilgi ve İstatistikler')
             .setColor('#9b59b6')
             .setThumbnail(client.user.displayAvatarURL())
             .addFields(
@@ -35,7 +35,7 @@ module.exports = {
                 { name: '📘 Discord.js', value: `v${djsVersion}`, inline: true },
                 { name: '💻 İşletim Sistemi', value: `${os.type()} (${os.arch()})`, inline: true }
             )
-            .setFooter({ text: 'Nuro Bot Sistem Durumu' })
+            .setFooter({ text: 'Syncord Bot Sistem Durumu' })
             .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });

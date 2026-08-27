@@ -1,5 +1,5 @@
 {
-  "name": "nuro-bot",
+  "name": "syncord-bot",
   "version": "1.0.0",
   "description": "",
   "repository": {
@@ -17,6 +17,7 @@
     "test": "node token-test.js"
   },
   "dependencies": {
+    "@napi-rs/canvas": "^1.0.8",
     "discord.js": "^14.27.0",
     "dotenv": "^17.4.2",
     "mongoose": "^9.9.3"

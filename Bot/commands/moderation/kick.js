@@ -38,7 +38,7 @@ module.exports = {
                 .setTitle('👢 Üye Atıldı')
                 .setColor('#e67e22')
                 .addFields(
-                    { name: 'Atılan Üye', value: `${targetUser.tag} (${targetUser.id})`, inline: true },
+                    { name: 'Atılan Üye', value: `${targetUser.tag}`, inline: true },
                     { name: 'Yetkili', value: `${interaction.user.tag}`, inline: true },
                     { name: 'Sebep', value: reason, inline: false }
                 )

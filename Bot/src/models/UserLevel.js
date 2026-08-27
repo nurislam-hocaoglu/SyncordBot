@@ -4,13 +4,11 @@ const mongoose = require('mongoose');
 const userLevelSchema = new mongoose.Schema({
     guildId: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
     userId: {
         type: String,
-        required: true,
-        index: true
+        required: true
     },
     // Mevcut seviye XP'si
     xp: {
@@ -46,6 +44,11 @@ const userLevelSchema = new mongoose.Schema({
     notifications: {
         type: Boolean,
         default: true
+    },
+    // Toplam ses kanalı süresi (saniye)
+    voiceTime: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true
@@ -76,7 +79,7 @@ userLevelSchema.statics.getLeaderboard = function(guildId, limit = 10) {
     return this.find({ guildId })
         .sort({ totalXP: -1 })
         .limit(limit)
-        .select('userId xp totalXP level messageCount')
+        .select('userId xp totalXP level messageCount voiceTime')
         .lean();
 };
 
@@ -96,7 +99,8 @@ userLevelSchema.statics.getUserRank = async function(guildId, userId) {
         xp: user.xp,
         totalXP: user.totalXP,
         level: user.level,
-        messageCount: user.messageCount
+        messageCount: user.messageCount,
+        voiceTime: user.voiceTime || 0
     };
 };
 
@@ -113,6 +117,25 @@ userLevelSchema.methods.addXP = function(amount) {
     this.level = newLevel;
     
     return { leveledUp, newLevel, oldLevel: newLevel - (leveledUp ? 1 : 0) };
+};
+
+// Method: Ses kanalı XP ekle (saniye cinsinden süre alır)
+// Her 60 saniye için 5 XP verir
+userLevelSchema.methods.addVoiceXP = function(seconds) {
+    const xpGained = Math.floor(seconds / 60) * 5;
+    this.voiceTime = (this.voiceTime || 0) + seconds;
+
+    if (xpGained <= 0) return { leveledUp: false, xpGained: 0 };
+
+    this.xp += xpGained;
+    this.totalXP += xpGained;
+
+    // Yeni seviye hesapla
+    const newLevel = Math.floor(0.1 * Math.sqrt(this.xp));
+    const leveledUp = newLevel > this.level;
+    this.level = newLevel;
+
+    return { leveledUp, newLevel, xpGained };
 };
 
 module.exports = mongoose.model('UserLevel', userLevelSchema);
